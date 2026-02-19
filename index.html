@@ -2,13 +2,207 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Your Name — Portfolio</title>
+    <meta name="description" content="Portfolio website for Your Name: projects, skills, and contact." />
+    <link rel="stylesheet" href="style.css" />
 </head>
-wowa
 <body>
-    
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="#top" aria-label="Homepage">
+                <span class="brand-mark" aria-hidden="true">YN</span>
+                <span class="brand-text">Your Name</span>
+            </a>
+
+            <nav class="site-nav" aria-label="Primary">
+                <a class="nav-link" href="#about">About</a>
+                <a class="nav-link" href="#projects">Projects</a>
+                <a class="nav-link" href="#skills">Skills</a>
+                <a class="nav-link" href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main">
+        <section class="hero" id="top">
+            <div class="container hero-inner">
+                <div class="hero-copy">
+                    <p class="eyebrow">Student / Developer</p>
+                    <h1 class="hero-title">Hi, I’m <span class="accent">Your Name</span>.</h1>
+                    <p class="hero-subtitle">
+                        I build small, reliable web projects. This is a simple portfolio layout you can customize with your own work.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a class="btn" href="#projects">View projects</a>
+                        <a class="btn btn-ghost" href="#contact">Contact</a>
+                    </div>
+
+                    <dl class="hero-stats" aria-label="Quick highlights">
+                        <div class="stat">
+                            <dt>Focus</dt>
+                            <dd>Web + UI</dd>
+                        </div>
+                        <div class="stat">
+                            <dt>Location</dt>
+                            <dd>Your City</dd>
+                        </div>
+                        <div class="stat">
+                            <dt>Availability</dt>
+                            <dd>Open to work</dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <aside class="hero-card" aria-label="Profile card">
+                    <div class="avatar" aria-hidden="true">YN</div>
+                    <div class="card-body">
+                        <p class="card-title">Your Name</p>
+                        <p class="card-subtitle">Frontend developer</p>
+                        <div class="card-links" aria-label="Links">
+                            <a class="chip" href="#" rel="noreferrer">GitHub</a>
+                            <a class="chip" href="#" rel="noreferrer">LinkedIn</a>
+                            <a class="chip" href="#" rel="noreferrer">Resume</a>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="section" id="about">
+            <div class="container">
+                <div class="section-head">
+                    <h2>About</h2>
+                    <p class="muted">A short intro about who you are and what you like building.</p>
+                </div>
+
+                <div class="two-col">
+                    <div class="panel">
+                        <h3>Bio</h3>
+                        <p>
+                            Write 2–4 sentences here. Mention what you’re learning, what you’re best at, and what you’re looking for.
+                        </p>
+                    </div>
+                    <div class="panel">
+                        <h3>What I do</h3>
+                        <ul class="checklist">
+                            <li>Build responsive pages</li>
+                            <li>Create clean layouts and components</li>
+                            <li>Ship small projects end-to-end</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="projects">
+            <div class="container">
+                <div class="section-head">
+                    <h2>Projects</h2>
+                    <p class="muted">Add 3–6 projects. Keep descriptions short and specific.</p>
+                </div>
+
+                <div class="grid cards">
+                    <article class="card">
+                        <h3>Project One</h3>
+                        <p class="muted">A short description of what it does and what you learned.</p>
+                        <p class="tags" aria-label="Tech used">
+                            <span class="tag">HTML</span>
+                            <span class="tag">CSS</span>
+                        </p>
+                        <div class="card-actions">
+                            <a class="text-link" href="#">Live</a>
+                            <a class="text-link" href="#">Code</a>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <h3>Project Two</h3>
+                        <p class="muted">Another project — maybe a game, tool, or small app.</p>
+                        <p class="tags" aria-label="Tech used">
+                            <span class="tag">JavaScript</span>
+                            <span class="tag">API</span>
+                        </p>
+                        <div class="card-actions">
+                            <a class="text-link" href="#">Live</a>
+                            <a class="text-link" href="#">Code</a>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <h3>Project Three</h3>
+                        <p class="muted">A third project with a clear outcome and scope.</p>
+                        <p class="tags" aria-label="Tech used">
+                            <span class="tag">UI</span>
+                            <span class="tag">Accessibility</span>
+                        </p>
+                        <div class="card-actions">
+                            <a class="text-link" href="#">Live</a>
+                            <a class="text-link" href="#">Code</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="skills">
+            <div class="container">
+                <div class="section-head">
+                    <h2>Skills</h2>
+                    <p class="muted">A quick list of tools/tech you use.</p>
+                </div>
+
+                <div class="panel">
+                    <div class="pill-row" aria-label="Skill list">
+                        <span class="pill">HTML</span>
+                        <span class="pill">CSS</span>
+                        <span class="pill">JavaScript</span>
+                        <span class="pill">Git</span>
+                        <span class="pill">Responsive Design</span>
+                        <span class="pill">Accessibility</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="contact">
+            <div class="container">
+                <div class="section-head">
+                    <h2>Contact</h2>
+                    <p class="muted">The simplest setup: email + a couple links.</p>
+                </div>
+
+                <div class="two-col">
+                    <div class="panel">
+                        <h3>Email</h3>
+                        <p>
+                            <a class="text-link" href="mailto:you@example.com">you@example.com</a>
+                        </p>
+                        <p class="muted">Replace with your real address.</p>
+                    </div>
+
+                    <div class="panel">
+                        <h3>Links</h3>
+                        <ul class="link-list">
+                            <li><a class="text-link" href="#">GitHub</a></li>
+                            <li><a class="text-link" href="#">LinkedIn</a></li>
+                            <li><a class="text-link" href="#">Resume</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p class="muted">© 2026 Your Name</p>
+            <a class="text-link" href="#top">Back to top</a>
+        </div>
+    </footer>
 </body>
 </html>
 
