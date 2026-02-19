@@ -1,5 +1,3 @@
-/* Basic portfolio layout (no frameworks) */
-
 :root {
 	color-scheme: light;
 	--bg: #0b0e14;
@@ -259,24 +257,27 @@ img {
 	border: 1px solid rgba(255, 255, 255, 0.12);
 	background: linear-gradient(180deg, rgba(17, 24, 39, 0.9), rgba(15, 23, 42, 0.75));
 	border-radius: var(--radius);
-	padding: var(--space-4);
+	padding: 0;
+	overflow: hidden;
 	box-shadow: var(--shadow);
 }
 
-.avatar {
-	width: 84px;
-	height: 84px;
-	border-radius: 28px;
-	display: grid;
-	place-items: center;
-	font-weight: 800;
-	font-size: 22px;
-	background: linear-gradient(135deg, rgba(96, 165, 250, 0.35), rgba(167, 139, 250, 0.25));
-	border: 1px solid rgba(255, 255, 255, 0.18);
+
+.hero-photo {
+	aspect-ratio: 4 / 5;
+	background: linear-gradient(135deg, rgba(96, 165, 250, 0.18), rgba(167, 139, 250, 0.12));
+	border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.profile-photo {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
 .card-body {
-	margin-top: var(--space-3);
+	margin-top: 0;
+	padding: var(--space-4);
 }
 
 .card-title {
