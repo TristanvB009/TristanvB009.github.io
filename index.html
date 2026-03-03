@@ -265,6 +265,56 @@
             <a class="text-link" href="#top">Back to top</a>
         </div>
     </footer>
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-hidden="true" hidden>
+        <img class="lightbox-img" id="lightboxImg" alt="" />
+    </div>
+
+    <script>
+        (() => {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightboxImg');
+
+            if (!lightbox || !lightboxImg) return;
+
+            const open = (img) => {
+                const fullSrc = img.dataset.full || img.currentSrc || img.src;
+                if (!fullSrc) return;
+
+                lightboxImg.src = fullSrc;
+                lightboxImg.alt = img.alt || '';
+
+                lightbox.hidden = false;
+                lightbox.setAttribute('aria-hidden', 'false');
+                lightbox.classList.add('open');
+                document.body.classList.add('lightbox-open');
+            };
+
+            const close = () => {
+                lightbox.classList.remove('open');
+                lightbox.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('lightbox-open');
+                lightbox.hidden = true;
+                lightboxImg.src = '';
+                lightboxImg.alt = '';
+            };
+
+            document.addEventListener('click', (e) => {
+                const clickedImg = e.target.closest('.project-photos img.project-photo');
+                if (clickedImg) {
+                    open(clickedImg);
+                }
+            });
+
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) close();
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !lightbox.hidden) close();
+            });
+        })();
+    </script>
 </body>
 </html>
 
