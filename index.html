@@ -90,6 +90,8 @@
                                     loading="lazy"
                                 />
                             </div>
+                            <button class="carousel-arrow carousel-prev" type="button" aria-label="Previous photo">‹</button>
+                            <button class="carousel-arrow carousel-next" type="button" aria-label="Next photo">›</button>
                             <div class="carousel-dots" aria-label="Profile photo navigation"></div>
                         </div>
                     </div>
@@ -518,6 +520,8 @@
             const initCarousel = (carousel) => {
                 const track = carousel.querySelector('.carousel-track');
                 const dots = carousel.querySelector('.carousel-dots');
+                const prevBtn = carousel.querySelector('.carousel-prev');
+                const nextBtn = carousel.querySelector('.carousel-next');
                 if (!track || !dots) return;
 
                 const slides = Array.from(track.querySelectorAll('.carousel-slide'));
@@ -557,6 +561,15 @@
                     if (timer) window.clearInterval(timer);
                     timer = null;
                 };
+
+                const step = (delta) => {
+                    stop();
+                    setIndex(index + delta);
+                    start();
+                };
+
+                if (prevBtn) prevBtn.addEventListener('click', () => step(-1));
+                if (nextBtn) nextBtn.addEventListener('click', () => step(1));
 
                 carousel.addEventListener('mouseenter', stop);
                 carousel.addEventListener('mouseleave', start);
