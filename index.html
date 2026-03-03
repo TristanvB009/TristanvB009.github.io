@@ -463,6 +463,8 @@
 
                 const clickedExpand = e.target.closest('.video-expand');
                 if (clickedExpand) {
+                    e.preventDefault();
+                    e.stopPropagation();
                     const wrap = clickedExpand.closest('.project-video-wrap');
                     const video = wrap ? wrap.querySelector('video') : null;
                     openVideo(video);
