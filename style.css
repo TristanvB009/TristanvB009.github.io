@@ -215,12 +215,70 @@ img {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	padding: 10px 14px;
-	border-radius: 12px;
-	text-decoration: none;
-	border: 1px solid rgba(255, 255, 255, 0.18);
-	background: linear-gradient(135deg, rgba(96, 165, 250, 0.35), rgba(96, 165, 250, 0.18));
-	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+.profile-photo {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+/* Hero profile carousel */
+.carousel {
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+
+.carousel-track {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	transform: translateX(0%);
+	transition: transform 450ms ease;
+	will-change: transform;
+}
+
+.carousel-slide {
+	flex: 0 0 100%;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.carousel-dots {
+	position: absolute;
+	left: 50%;
+	bottom: 12px;
+	transform: translateX(-50%);
+	display: flex;
+	gap: 8px;
+	padding: 6px 10px;
+	border-radius: 999px;
+	background: rgba(0,0,0,0.35);
+	backdrop-filter: blur(6px);
+}
+
+.carousel-dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 999px;
+	border: 1px solid rgba(255,255,255,0.55);
+	background: rgba(255,255,255,0.22);
+	padding: 0;
+	cursor: pointer;
+}
+
+.carousel-dot.is-active {
+	background: rgba(255,255,255,0.85);
+	border-color: rgba(255,255,255,0.9);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.carousel-track {
+		transition: none;
+	}
+}
 }
 
 .btn:hover,

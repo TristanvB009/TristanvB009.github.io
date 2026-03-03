@@ -62,14 +62,37 @@
                 </div>
 
                 <aside class="hero-card" aria-label="Profile card">
-                    <div class="hero-photo" aria-label="Profile photo">
-                        <img
-                            class="profile-photo"
-                            src="images/276673b4-30f7-4e1d-b44b-2c0ae71744f1.jpeg"
-                            alt="Portrait of Tristan"
-                            width="480"
-                            height="640"
-                        />
+                    <div class="hero-photo" aria-label="Profile photos">
+                        <div class="carousel" data-interval="5500">
+                            <div class="carousel-track" aria-live="polite">
+                                <img
+                                    class="carousel-slide profile-photo"
+                                    src="images/276673b4-30f7-4e1d-b44b-2c0ae71744f1.jpeg"
+                                    alt="Portrait of Tristan"
+                                    width="480"
+                                    height="640"
+                                    loading="eager"
+                                />
+                                <img
+                                    class="carousel-slide profile-photo"
+                                    src="image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27640%27%20height%3D%27800%27%20viewBox%3D%270%200%20640%20800%27%3E%3Crect%20width%3D%27100%25%27%20height%3D%27100%25%27%20fill%3D%27%230f172a%27/%3E%3Ctext%20x%3D%2750%25%27%20y%3D%2750%25%27%20fill%3D%27%23a1a1aa%27%20font-size%3D%2728%27%20font-family%3D%27Arial%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27middle%27%3EAdd%20another%20photo%3C/text%3E%3C/svg%3E"
+                                    alt="Add another photo"
+                                    alt="Tristan photo 2"
+                                    width="480"
+                                    height="640"
+                                    loading="lazy"
+                                />
+                                <img
+                                    class="carousel-slide profile-photo"
+                                    src="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27640%27%20height%3D%27800%27%20viewBox%3D%270%200%20640%20800%27%3E%3Crect%20width%3D%27100%25%27%20height%3D%27100%25%27%20fill%3D%27%230f172a%27/%3E%3Ctext%20x%3D%2750%25%27%20y%3D%2750%25%27%20fill%3D%27%23a1a1aa%27%20font-size%3D%2728%27%20font-family%3D%27Arial%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27middle%27%3EAdd%20another%20photo%3C/text%3E%3C/svg%3E"
+                                    alt="Add another photo"
+                                    width="480"
+                                    height="640"
+                                    loading="lazy"
+                                />
+                            </div>
+                            <div class="carousel-dots" aria-label="Profile photo navigation"></div>
+                        </div>
                     </div>
                     <div class="card-body">
                         <p class="card-title">Tristan van Bruggen</p>
@@ -489,6 +512,63 @@
                 if (lightbox && !lightbox.hidden) closeImage();
                 if (videobox && !videobox.hidden) closeVideo();
             });
+
+            // Profile photo carousel
+            const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            const initCarousel = (carousel) => {
+                const track = carousel.querySelector('.carousel-track');
+                const dots = carousel.querySelector('.carousel-dots');
+                if (!track || !dots) return;
+
+                const slides = Array.from(track.querySelectorAll('.carousel-slide'));
+                if (slides.length <= 1) return;
+
+                let index = 0;
+                let timer = null;
+
+                const setIndex = (next) => {
+                    index = (next + slides.length) % slides.length;
+                    track.style.transform = `translateX(${-index * 100}%)`;
+                    Array.from(dots.children).forEach((btn, i) => {
+                        btn.classList.toggle('is-active', i === index);
+                        btn.setAttribute('aria-current', i === index ? 'true' : 'false');
+                    });
+                };
+
+                // Build dots
+                dots.innerHTML = '';
+                slides.forEach((_, i) => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'carousel-dot';
+                    btn.setAttribute('aria-label', `Show photo ${i + 1}`);
+                    btn.addEventListener('click', () => setIndex(i));
+                    dots.appendChild(btn);
+                });
+
+                const start = () => {
+                    if (prefersReducedMotion) return;
+                    const interval = Number.parseInt(carousel.dataset.interval || '5500', 10);
+                    if (!Number.isFinite(interval) || interval < 2000) return;
+                    timer = window.setInterval(() => setIndex(index + 1), interval);
+                };
+
+                const stop = () => {
+                    if (timer) window.clearInterval(timer);
+                    timer = null;
+                };
+
+                carousel.addEventListener('mouseenter', stop);
+                carousel.addEventListener('mouseleave', start);
+                carousel.addEventListener('focusin', stop);
+                carousel.addEventListener('focusout', start);
+
+                setIndex(0);
+                start();
+            };
+
+            document.querySelectorAll('.hero-photo .carousel').forEach(initCarousel);
         })();
     </script>
 </body>
