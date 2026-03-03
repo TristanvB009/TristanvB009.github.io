@@ -552,6 +552,7 @@
 
                 const start = () => {
                     if (prefersReducedMotion) return;
+                    if (timer) return;
                     const interval = Number.parseInt(carousel.dataset.interval || '5500', 10);
                     if (!Number.isFinite(interval) || interval < 2000) return;
                     timer = window.setInterval(() => setIndex(index + 1), interval);
@@ -574,7 +575,11 @@
                 carousel.addEventListener('mouseenter', stop);
                 carousel.addEventListener('mouseleave', start);
                 carousel.addEventListener('focusin', stop);
-                carousel.addEventListener('focusout', start);
+                carousel.addEventListener('focusout', (e) => {
+                    // Only restart when focus leaves the carousel entirely.
+                    if (e.relatedTarget && carousel.contains(e.relatedTarget)) return;
+                    start();
+                });
 
                 setIndex(0);
                 start();
