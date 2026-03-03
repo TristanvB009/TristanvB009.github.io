@@ -256,11 +256,12 @@ img {
 	left: 50%;
 	bottom: 12px;
 	transform: translateX(-50%);
+	z-index: 3;
 	display: flex;
 	gap: 8px;
 	padding: 6px 10px;
 	border-radius: 999px;
-	background: rgba(0,0,0,0.35);
+	background: rgba(0, 0, 0, 0.45);
 	backdrop-filter: blur(6px);
 }
 
@@ -268,17 +269,19 @@ img {
 	position: absolute;
 	top: 50%;
 	transform: translateY(-50%);
+	z-index: 4;
 	width: 34px;
 	height: 34px;
 	border-radius: 999px;
-	border: 1px solid rgba(255, 255, 255, 0.18);
-	background: rgba(0, 0, 0, 0.35);
+	border: 1px solid rgba(255, 255, 255, 0.28);
+	background: rgba(0, 0, 0, 0.55);
 	backdrop-filter: blur(6px);
 	color: var(--text);
 	display: grid;
 	place-items: center;
 	font: inherit;
 	font-size: 20px;
+	font-weight: 700;
 	line-height: 1;
 	cursor: pointer;
 	padding: 0;
