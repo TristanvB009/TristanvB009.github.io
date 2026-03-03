@@ -426,7 +426,8 @@ img {
 }
 
 .project-content {
-	padding: var(--space-5) var(--space-4) var(--space-4);
+	padding: var(--space-4);
+	padding-top: calc(var(--space-6) + 8px);
 }
 
 .project-content h3 {
