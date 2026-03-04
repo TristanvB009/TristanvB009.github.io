@@ -679,6 +679,34 @@ img {
 	border-bottom-color: rgba(96, 165, 250, 0.9);
 }
 
+.repo-link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	text-decoration: none;
+	font-weight: 650;
+	line-height: 1;
+	padding: 9px 12px;
+	border-radius: var(--radius-sm);
+	border: 1px solid rgba(255, 255, 255, 0.16);
+	color: var(--text);
+	background: linear-gradient(135deg, rgba(96, 165, 250, 0.28), rgba(255, 255, 255, 0.06));
+	transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.repo-link:hover,
+.repo-link:focus-visible {
+	outline: none;
+	border-color: rgba(96, 165, 250, 0.45);
+	background: linear-gradient(135deg, rgba(96, 165, 250, 0.36), rgba(255, 255, 255, 0.08));
+	transform: translateY(-1px);
+}
+
+.repo-link:active {
+	transform: translateY(0px);
+}
+
 .pill-row {
 	display: flex;
 	flex-wrap: wrap;
