@@ -366,10 +366,32 @@
 
                 <div class="two-col">
                     <div class="panel">
-                        <h3>Email</h3>
-                        <p>
-                            <a class="text-link" href="mailto:tristanvbruggen@gmail.com">tristanvbruggen@gmail.com</a>
-                        </p>
+                        <h3>Send a message</h3>
+                        <form class="contact-form" action="https://tristanv-b009-github-io.vercel.app/api/contact" method="POST">
+
+                            <div class="form-field">
+                                <label for="contactName">Name</label>
+                                <input id="contactName" name="name" type="text" autocomplete="name" required />
+                            </div>
+
+                            <div class="form-field">
+                                <label for="contactEmail">Email</label>
+                                <input id="contactEmail" name="email" type="email" autocomplete="email" required />
+                            </div>
+
+                            <div class="form-field">
+                                <label for="contactMessage">Message</label>
+                                <textarea id="contactMessage" name="message" rows="6" required></textarea>
+                            </div>
+
+                            <div class="hp" aria-hidden="true">
+                                <label for="contactWebsite">Website</label>
+                                <input id="contactWebsite" name="_gotcha" type="text" tabindex="-1" autocomplete="off" />
+                            </div>
+
+                            <button class="btn" type="submit">Send message</button>
+                            <p class="muted form-status" role="status" aria-live="polite"></p>
+                        </form>
                     </div>
 
                     <div class="panel">
@@ -581,6 +603,56 @@
             };
 
             document.querySelectorAll('.hero-photo .carousel').forEach(initCarousel);
+
+            const initContactForm = () => {
+                const form = document.querySelector('.contact-form');
+                if (!form) return;
+
+                const status = form.querySelector('.form-status');
+                const submitBtn = form.querySelector('button[type="submit"]');
+
+                const setStatus = (message) => {
+                    if (!status) return;
+                    status.textContent = message;
+                };
+
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    setStatus('');
+
+                    if (submitBtn) submitBtn.disabled = true;
+                    try {
+                        const formData = new FormData(form);
+                        const body = new URLSearchParams();
+                        for (const [key, value] of formData.entries()) {
+                            body.append(key, String(value));
+                        }
+
+                        const response = await fetch(form.action, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                            },
+                            body: body.toString(),
+                        });
+
+                        const payload = await response.json().catch(() => ({}));
+                        if (!response.ok || !payload.ok) {
+                            setStatus(payload.error || 'Something went wrong. Please try again.');
+                            return;
+                        }
+
+                        form.reset();
+                        setStatus('Message sent — thanks!');
+                    } catch {
+                        setStatus('Could not send message. Please try again.');
+                    } finally {
+                        if (submitBtn) submitBtn.disabled = false;
+                    }
+                });
+            };
+
+            initContactForm();
         })();
     </script>
 </body>

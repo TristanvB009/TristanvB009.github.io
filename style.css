@@ -219,7 +219,7 @@ img {
 	padding: 10px 14px;
 	border-radius: 999px;
 	border: 1px solid rgba(255, 255, 255, 0.18);
-	background: rgba(255, 255, 255, 0.06);
+	background: linear-gradient(135deg, rgba(96, 165, 250, 0.22), rgba(255, 255, 255, 0.06));
 	color: var(--text);
 	font-weight: 600;
 	transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
@@ -342,11 +342,12 @@ img {
 .btn:focus-visible {
 	outline: none;
 	border-color: rgba(255, 255, 255, 0.28);
+	background: linear-gradient(135deg, rgba(96, 165, 250, 0.30), rgba(255, 255, 255, 0.08));
 	transform: translateY(-1px);
 }
 
 .btn-ghost {
-	background: rgba(255, 255, 255, 0.04);
+	background: linear-gradient(135deg, rgba(96, 165, 250, 0.12), rgba(255, 255, 255, 0.04));
 	box-shadow: none;
 }
 
@@ -451,6 +452,64 @@ img {
 	background: rgba(255, 255, 255, 0.03);
 	border-radius: var(--radius);
 	padding: var(--space-4);
+}
+
+.contact-form {
+	display: grid;
+	gap: 12px;
+	margin-top: 12px;
+}
+
+.form-note {
+	margin: 0;
+}
+
+.form-field label {
+	display: block;
+	font-size: 12px;
+	color: var(--muted);
+	margin-bottom: 6px;
+}
+
+.form-field input,
+.form-field textarea {
+	width: 100%;
+	padding: 10px 12px;
+	border-radius: var(--radius-sm);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	background: rgba(255, 255, 255, 0.04);
+	color: var(--text);
+	font: inherit;
+}
+
+.form-field textarea {
+	resize: vertical;
+}
+
+.form-field input:focus-visible,
+.form-field textarea:focus-visible {
+	outline: none;
+	border-color: rgba(96, 165, 250, 0.55);
+	background: rgba(255, 255, 255, 0.05);
+}
+
+.contact-form .btn {
+	justify-self: start;
+}
+
+.contact-form .btn:disabled {
+	opacity: 0.7;
+	cursor: not-allowed;
+	transform: none;
+}
+
+.form-status {
+	min-height: 1.2em;
+	margin: 0;
+}
+
+.hp {
+	display: none;
 }
 
 .panel h3 {
@@ -653,12 +712,16 @@ img {
 }
 
 .tag {
-	font-size: 12px;
+	font-size: 11px;
 	padding: 6px 10px;
-	border-radius: 999px;
-	border: 1px solid rgba(255, 255, 255, 0.12);
-	background: rgba(255, 255, 255, 0.04);
+	border-radius: calc(var(--radius-sm) - 2px);
+	border: 1px solid rgba(255, 255, 255, 0.10);
+	background: var(--panel-2);
 	color: var(--muted);
+	font-weight: 650;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	cursor: default;
 }
 
 .card-actions {
@@ -715,10 +778,11 @@ img {
 
 .pill {
 	padding: 8px 12px;
-	border-radius: 999px;
-	border: 1px solid rgba(255, 255, 255, 0.12);
-	background: rgba(255, 255, 255, 0.04);
+	border-radius: var(--radius-sm);
+	border: 1px solid rgba(255, 255, 255, 0.10);
+	background: rgba(255, 255, 255, 0.05);
 	color: var(--text);
+	cursor: default;
 }
 
 /* Footer */
