@@ -85,8 +85,28 @@ export default async function handler(req, res) {
 		});
 
 		if (!sendResponse.ok) {
-			const details = await safeReadText(sendResponse);
-			res.status(502).json({ ok: false, error: 'Failed to send message.', details });
+			const providerText = await safeReadText(sendResponse);
+			const providerJson = safeJsonParse(providerText);
+			const providerMessage =
+				(providerJson && (providerJson.message || providerJson.error || providerJson.details)) || providerText;
+
+			let errorMessage = 'Failed to send message.';
+			const providerMessageLower = String(providerMessage || '').toLowerCase();
+			if (providerMessageLower.includes('verify') || providerMessageLower.includes('verified')) {
+				errorMessage = 'Email sender is not verified. Check Resend domain/sender verification.';
+			} else if (providerMessageLower.includes('api key') || providerMessageLower.includes('authorization')) {
+				errorMessage = 'Email provider authorization failed. Check RESEND_API_KEY.';
+			}
+
+			res.status(502).json({
+				ok: false,
+				error: errorMessage,
+				details: {
+					status: sendResponse.status,
+					provider: 'resend',
+					message: providerMessage,
+				},
+			});
 			return;
 		}
 
@@ -130,5 +150,13 @@ async function safeReadText(response) {
 		return await response.text();
 	} catch {
 		return '';
+	}
+}
+
+function safeJsonParse(text) {
+	try {
+		return JSON.parse(text);
+	} catch {
+		return null;
 	}
 }

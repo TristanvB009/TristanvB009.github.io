@@ -638,6 +638,9 @@
 
                         const payload = await response.json().catch(() => ({}));
                         if (!response.ok || !payload.ok) {
+                            if (payload && payload.details) {
+                                console.error('Contact form error details:', payload.details);
+                            }
                             setStatus(payload.error || 'Something went wrong. Please try again.');
                             return;
                         }
