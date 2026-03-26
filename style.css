@@ -633,14 +633,47 @@ img {
 	display: grid;
 }
 
-.lightbox-img {
-	max-width: min(1200px, 92vw);
-	max-height: 88vh;
-	width: auto;
-	height: auto;
+.lightbox-panel {
+	width: min(1200px, 92vw);
+	display: grid;
+	gap: 12px;
+}
+
+.lightbox-carousel {
+	position: relative;
+	overflow: hidden;
 	border-radius: var(--radius);
 	box-shadow: var(--shadow);
 	border: 1px solid rgba(255, 255, 255, 0.14);
+	background: rgba(0, 0, 0, 0.35);
+}
+
+.lightbox-track {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	transform: translateX(0%);
+	transition: transform 450ms ease;
+	will-change: transform;
+}
+
+.lightbox-slide {
+	flex: 0 0 100%;
+	width: 100%;
+	max-height: 88vh;
+	height: auto;
+	object-fit: contain;
+	display: block;
+}
+
+.lightbox-video {
+	background: #000;
+}
+
+.lightbox-dots {
+	display: flex;
+	justify-content: center;
+	gap: 10px;
 }
 
 .videobox {

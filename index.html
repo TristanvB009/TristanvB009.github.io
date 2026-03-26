@@ -415,7 +415,22 @@
     </footer>
 
     <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-hidden="true" hidden>
-        <img class="lightbox-img" id="lightboxImg" alt="" />
+        <div class="lightbox-panel" role="document" aria-label="Image viewer">
+            <div class="lightbox-carousel" aria-live="polite">
+                <div class="lightbox-track" id="lightboxTrack"></div>
+                <button class="carousel-arrow carousel-prev lightbox-prev" id="lightboxPrev" type="button" aria-label="Previous image">
+                    <svg class="carousel-arrow-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M14.5 5.5L8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+                <button class="carousel-arrow carousel-next lightbox-next" id="lightboxNext" type="button" aria-label="Next image">
+                    <svg class="carousel-arrow-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M9.5 5.5L16 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+            </div>
+            <div class="lightbox-dots" id="lightboxDots" aria-label="Image navigation"></div>
+        </div>
     </div>
 
     <div class="videobox" id="videobox" role="dialog" aria-modal="true" aria-hidden="true" hidden>
@@ -427,19 +442,128 @@
     <script>
         (() => {
             const lightbox = document.getElementById('lightbox');
-            const lightboxImg = document.getElementById('lightboxImg');
+            const lightboxTrack = document.getElementById('lightboxTrack');
+            const lightboxDots = document.getElementById('lightboxDots');
+            const lightboxPrev = document.getElementById('lightboxPrev');
+            const lightboxNext = document.getElementById('lightboxNext');
 
             const videobox = document.getElementById('videobox');
             const videoboxVideo = document.getElementById('videoboxVideo');
 
-            const openImage = (img) => {
-                if (!lightbox || !lightboxImg) return;
+            let lightboxSlides = [];
+            let lightboxIndex = 0;
 
-                const fullSrc = img.dataset.full || img.currentSrc || img.src;
-                if (!fullSrc) return;
+            const getImageSrc = (imageEl) => imageEl.dataset.full || imageEl.currentSrc || imageEl.src;
+            const getVideoSrc = (videoEl) => {
+                if (!videoEl) return '';
+                const source = videoEl.querySelector('source');
+                return (source && source.src) || videoEl.currentSrc || videoEl.src || '';
+            };
 
-                lightboxImg.src = fullSrc;
-                lightboxImg.alt = img.alt || '';
+            const pauseLightboxVideos = (exceptIndex) => {
+                if (!lightboxTrack) return;
+                Array.from(lightboxTrack.children).forEach((child, i) => {
+                    if (!(child instanceof HTMLVideoElement)) return;
+                    if (i === exceptIndex) return;
+                    try {
+                        child.pause();
+                    } catch {
+                        // ignore
+                    }
+                });
+            };
+
+            const renderLightbox = () => {
+                if (!lightboxTrack || !lightboxDots) return;
+                lightboxTrack.style.transform = `translateX(${-lightboxIndex * 100}%)`;
+                Array.from(lightboxDots.children).forEach((btn, i) => {
+                    btn.classList.toggle('is-active', i === lightboxIndex);
+                    btn.setAttribute('aria-current', i === lightboxIndex ? 'true' : 'false');
+                });
+                pauseLightboxVideos(lightboxIndex);
+            };
+
+            const setLightboxIndex = (next) => {
+                if (lightboxSlides.length === 0) return;
+                lightboxIndex = (next + lightboxSlides.length) % lightboxSlides.length;
+                renderLightbox();
+            };
+
+            const openProjectMedia = (projectEl, start) => {
+                if (!lightbox || !lightboxTrack || !lightboxDots || !projectEl) return;
+
+                const imgs = Array.from(projectEl.querySelectorAll('.project-photos img.project-photo'));
+                const videoEl = projectEl.querySelector('.project-video-wrap video');
+                const videoSrc = getVideoSrc(videoEl);
+
+                lightboxSlides = [];
+                imgs.forEach((el) => {
+                    const src = getImageSrc(el);
+                    if (!src) return;
+                    lightboxSlides.push({ type: 'image', src, alt: el.alt || '' });
+                });
+                if (videoSrc) {
+                    lightboxSlides.push({
+                        type: 'video',
+                        src: videoSrc,
+                        poster: (videoEl && videoEl.poster) || '',
+                        muted: !!(videoEl && videoEl.muted),
+                    });
+                }
+
+                if (lightboxSlides.length === 0) return;
+
+                // Pick starting index
+                lightboxIndex = 0;
+                if (start && start.type === 'image' && start.src) {
+                    const idx = lightboxSlides.findIndex((s) => s.type === 'image' && s.src === start.src);
+                    if (idx >= 0) lightboxIndex = idx;
+                } else if (start && start.type === 'video') {
+                    const idx = lightboxSlides.findIndex((s) => s.type === 'video');
+                    if (idx >= 0) lightboxIndex = idx;
+                }
+
+                // Build slides
+                lightboxTrack.innerHTML = '';
+                lightboxSlides.forEach((slide) => {
+                    if (slide.type === 'video') {
+                        const slideVideo = document.createElement('video');
+                        slideVideo.className = 'lightbox-slide lightbox-video';
+                        slideVideo.controls = true;
+                        slideVideo.playsInline = true;
+                        slideVideo.preload = 'metadata';
+                        slideVideo.muted = slide.muted;
+                        if (slide.poster) slideVideo.poster = slide.poster;
+                        slideVideo.src = slide.src;
+                        lightboxTrack.appendChild(slideVideo);
+                        return;
+                    }
+
+                    const slideImg = document.createElement('img');
+                    slideImg.className = 'lightbox-slide';
+                    slideImg.src = slide.src;
+                    slideImg.alt = slide.alt || '';
+                    slideImg.loading = 'eager';
+                    lightboxTrack.appendChild(slideImg);
+                });
+
+                // Build dots
+                lightboxDots.innerHTML = '';
+                lightboxSlides.forEach((slide, i) => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'carousel-dot';
+                    btn.setAttribute('aria-label', slide.type === 'video' ? 'Show video' : `Show image ${i + 1}`);
+                    btn.addEventListener('click', () => setLightboxIndex(i));
+                    lightboxDots.appendChild(btn);
+                });
+
+                const showNav = lightboxSlides.length > 1;
+                if (lightboxPrev) lightboxPrev.hidden = !showNav;
+                if (lightboxNext) lightboxNext.hidden = !showNav;
+                lightboxDots.hidden = !showNav;
+
+                renderLightbox();
 
                 lightbox.hidden = false;
                 lightbox.setAttribute('aria-hidden', 'false');
@@ -447,15 +571,26 @@
                 document.body.classList.add('lightbox-open');
             };
 
+            const openImage = (img) => {
+                if (!img) return;
+                const projectEl = img.closest('.project-card') || img.closest('.card') || img.closest('article');
+                openProjectMedia(projectEl, { type: 'image', src: getImageSrc(img) });
+            };
+
             const closeImage = () => {
-                if (!lightbox || !lightboxImg) return;
+                if (!lightbox || !lightboxTrack || !lightboxDots) return;
+
+                pauseLightboxVideos(-1);
 
                 lightbox.classList.remove('open');
                 lightbox.setAttribute('aria-hidden', 'true');
                 document.body.classList.remove('lightbox-open');
                 lightbox.hidden = true;
-                lightboxImg.src = '';
-                lightboxImg.alt = '';
+
+                lightboxSlides = [];
+                lightboxIndex = 0;
+                lightboxTrack.innerHTML = '';
+                lightboxDots.innerHTML = '';
             };
 
             const openVideo = (video) => {
@@ -506,15 +641,30 @@
                 if (clickedExpand) {
                     e.preventDefault();
                     e.stopPropagation();
-                    const wrap = clickedExpand.closest('.project-video-wrap');
-                    const video = wrap ? wrap.querySelector('video') : null;
-                    openVideo(video);
+                    const projectEl = clickedExpand.closest('.project-card') || clickedExpand.closest('.card') || clickedExpand.closest('article');
+                    openProjectMedia(projectEl, { type: 'video' });
                 }
             });
 
             if (lightbox) {
                 lightbox.addEventListener('click', (e) => {
                     if (e.target === lightbox) closeImage();
+                });
+            }
+
+            if (lightboxPrev) {
+                lightboxPrev.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setLightboxIndex(lightboxIndex - 1);
+                });
+            }
+
+            if (lightboxNext) {
+                lightboxNext.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setLightboxIndex(lightboxIndex + 1);
                 });
             }
 
@@ -525,14 +675,30 @@
             }
 
             document.addEventListener('keydown', (e) => {
-                if (e.key !== 'Escape') return;
+                if (lightbox && !lightbox.hidden) {
+                    if (e.key === 'Escape') {
+                        closeImage();
+                        return;
+                    }
+                    if (e.key === 'ArrowLeft') {
+                        setLightboxIndex(lightboxIndex - 1);
+                        return;
+                    }
+                    if (e.key === 'ArrowRight') {
+                        setLightboxIndex(lightboxIndex + 1);
+                        return;
+                    }
+                }
 
-                if (lightbox && !lightbox.hidden) closeImage();
-                if (videobox && !videobox.hidden) closeVideo();
+                if (videobox && !videobox.hidden && e.key === 'Escape') closeVideo();
             });
 
             // Profile photo carousel
             const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            if (prefersReducedMotion && lightboxTrack) {
+                lightboxTrack.style.transition = 'none';
+            }
 
             const initCarousel = (carousel) => {
                 const track = carousel.querySelector('.carousel-track');
