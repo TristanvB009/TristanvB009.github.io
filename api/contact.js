@@ -1,15 +1,26 @@
 export default async function handler(req, res) {
 	const origin = req.headers.origin;
 	const allowedOrigins = parseAllowedOrigins(process.env.CONTACT_ALLOWED_ORIGIN);
-	const corsOrigin = pickCorsOrigin(origin, allowedOrigins);
+	const corsOrigin = getCorsOrigin(origin, allowedOrigins);
 
-	res.setHeader('Access-Control-Allow-Origin', corsOrigin);
-	res.setHeader('Vary', 'Origin');
+	if (corsOrigin) {
+		res.setHeader('Access-Control-Allow-Origin', corsOrigin);
+		res.setHeader('Vary', 'Origin');
+	}
 	res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
 	res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
 	if (req.method === 'OPTIONS') {
+		if (!corsOrigin) {
+			res.status(403).json({ ok: false, error: 'Origin not allowed.' });
+			return;
+		}
 		res.status(204).end();
+		return;
+	}
+
+	if (!corsOrigin) {
+		res.status(403).json({ ok: false, error: 'Origin not allowed.' });
 		return;
 	}
 
@@ -98,7 +109,8 @@ export default async function handler(req, res) {
 				errorMessage = 'Email provider authorization failed. Check RESEND_API_KEY.';
 			}
 
-			res.status(502).json({
+			const status = sendResponse.status >= 400 && sendResponse.status < 500 ? sendResponse.status : 502;
+			res.status(status).json({
 				ok: false,
 				error: errorMessage,
 				details: {
@@ -124,10 +136,21 @@ function parseAllowedOrigins(value) {
 		.filter(Boolean);
 }
 
-function pickCorsOrigin(origin, allowedOrigins) {
-	if (!origin) return allowedOrigins[0] || '*';
+function getCorsOrigin(origin, allowedOrigins) {
 	if (allowedOrigins.length === 0) return '*';
-	return allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
+	if (!origin) return null;
+	return isOriginAllowed(origin, allowedOrigins) ? origin : null;
+}
+
+function isOriginAllowed(origin, allowedOrigins) {
+	return allowedOrigins.some((allowed) => {
+		if (allowed === origin) return true;
+		if (allowed.startsWith('*.')) {
+			const suffix = allowed.slice(1); // '.vercel.app'
+			return origin.endsWith(suffix);
+		}
+		return false;
+	});
 }
 
 function readRawBody(req) {
