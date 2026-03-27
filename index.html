@@ -367,7 +367,9 @@
                 <div class="two-col">
                     <div class="panel">
                         <h3>Send a message</h3>
-                        <form class="contact-form" action="https://tristanv-b009-github-io.vercel.app/api/contact" method="POST">
+                        <form class="contact-form" action="https://api.web3forms.com/submit" method="POST">
+
+                            <input type="hidden" name="access_key" value="a57f5528-3b19-4b10-be3c-7fcb95ca6c54" />
 
                             <div class="form-field">
                                 <label for="contactName">Name</label>
@@ -798,16 +800,17 @@
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                                'Accept': 'application/json',
                             },
                             body: body.toString(),
                         });
 
                         const payload = await response.json().catch(() => ({}));
-                        if (!response.ok || !payload.ok) {
-                            if (payload && payload.details) {
-                                console.error('Contact form error details:', payload.details);
-                            }
-                            setStatus(payload.error || 'Something went wrong. Please try again.');
+
+                        const isSuccess = response.ok && (payload.success === true || payload.ok === true);
+                        if (!isSuccess) {
+                            console.error('Contact form error payload:', payload);
+                            setStatus(payload.message || payload.error || 'Something went wrong. Please try again.');
                             return;
                         }
 
