@@ -370,6 +370,7 @@
                         <form class="contact-form" action="https://api.web3forms.com/submit" method="POST">
 
                             <input type="hidden" name="access_key" value="a57f5528-3b19-4b10-be3c-7fcb95ca6c54" />
+                            <input type="hidden" name="subject" value="Portfolio Contact Form Submission" />
 
                             <div class="form-field">
                                 <label for="contactName">Name</label>
@@ -435,12 +436,6 @@
         </div>
     </div>
 
-    <div class="videobox" id="videobox" role="dialog" aria-modal="true" aria-hidden="true" hidden>
-        <div class="videobox-panel" role="document">
-            <video class="videobox-video" id="videoboxVideo" controls playsinline preload="metadata"></video>
-        </div>
-    </div>
-
     <script>
         (() => {
             const lightbox = document.getElementById('lightbox');
@@ -448,9 +443,6 @@
             const lightboxDots = document.getElementById('lightboxDots');
             const lightboxPrev = document.getElementById('lightboxPrev');
             const lightboxNext = document.getElementById('lightboxNext');
-
-            const videobox = document.getElementById('videobox');
-            const videoboxVideo = document.getElementById('videoboxVideo');
 
             let lightboxSlides = [];
             let lightboxIndex = 0;
@@ -595,45 +587,6 @@
                 lightboxDots.innerHTML = '';
             };
 
-            const openVideo = (video) => {
-                if (!videobox || !videoboxVideo || !video) return;
-
-                const source = video.querySelector('source');
-                const src = (source && source.src) || video.currentSrc || video.src;
-                if (!src) return;
-
-                try {
-                    video.pause();
-                } catch {
-                    // ignore
-                }
-
-                videoboxVideo.src = src;
-                videoboxVideo.poster = video.poster || '';
-                videoboxVideo.muted = video.muted;
-
-                videobox.hidden = false;
-                videobox.setAttribute('aria-hidden', 'false');
-                videobox.classList.add('open');
-                document.body.classList.add('lightbox-open');
-            };
-
-            const closeVideo = () => {
-                if (!videobox || !videoboxVideo) return;
-
-                try {
-                    videoboxVideo.pause();
-                } catch {
-                    // ignore
-                }
-                videoboxVideo.removeAttribute('src');
-                videoboxVideo.load();
-
-                videobox.classList.remove('open');
-                videobox.setAttribute('aria-hidden', 'true');
-                document.body.classList.remove('lightbox-open');
-                videobox.hidden = true;
-            };
 
             document.addEventListener('click', (e) => {
                 const clickedImg = e.target.closest('.project-photos img.project-photo');
@@ -670,12 +623,6 @@
                 });
             }
 
-            if (videobox) {
-                videobox.addEventListener('click', (e) => {
-                    if (e.target === videobox) closeVideo();
-                });
-            }
-
             document.addEventListener('keydown', (e) => {
                 if (lightbox && !lightbox.hidden) {
                     if (e.key === 'Escape') {
@@ -691,8 +638,6 @@
                         return;
                     }
                 }
-
-                if (videobox && !videobox.hidden && e.key === 'Escape') closeVideo();
             });
 
             // Profile photo carousel
