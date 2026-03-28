@@ -174,7 +174,7 @@ img {
 
 .hero-inner {
 	display: grid;
-	grid-template-columns: 1.4fr 0.8fr;
+	grid-template-columns: 1.5fr 0.7fr;
 	gap: var(--space-5);
 	align-items: start;
 }
@@ -458,6 +458,35 @@ img {
 	display: grid;
 	gap: 12px;
 	margin-top: 12px;
+}
+
+.contact-stack {
+	display: grid;
+	gap: var(--space-3);
+	justify-items: center;
+}
+
+.contact-panel {
+	width: 100%;
+	max-width: 760px;
+}
+
+.contact-icons {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	width: 100%;
+}
+
+.contact-icon {
+	padding: 10px;
+	border-color: rgba(255, 255, 255, 0.18);
+	background: rgba(255, 255, 255, 0.10);
+}
+
+.contact-icon img {
+	display: block;
 }
 
 .form-note {
